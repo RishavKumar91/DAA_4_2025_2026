@@ -1,33 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-    int n;
+void maximumStableWindows() {
+    int n, present = 0, absent = 0, final = 0;
     cin >> n;
 
-    vector<char> attendance(n);
-    for(int i = 0; i < n; i++) {
-        cin >> attendance[i];
-    }
+    vector<char> entries(n);
+    unordered_map<int, int> mapp;
+    mapp[0] = -1;
 
-    unordered_map<int, int> mp;
-    mp[0] = -1;   
-    int prefix_sum = 0;
-    int max_len = 0;
-
-    for(int i = 0; i < n; i++) {
-        if(attendance[i] == 'P')
-            prefix_sum += 1;
-        else
-            prefix_sum -= 1;
-
-        if(mp.find(prefix_sum) != mp.end()) {
-            max_len = max(max_len, i - mp[prefix_sum]);
-        } else {
-            mp[prefix_sum] = i;
+    for (char &t: entries) cin >> t;
+    for (int i = 0; i < n; i++) {
+        if (entries[i] == 'P') present++;
+        else absent++;
+        if (!mapp.count(present - absent)) mapp[present - absent] = i;
+        if (present == absent) final = max(final, present + absent);
+        else {
+            int idx = mapp[present - absent];
+            final = max(final, i - idx);
         }
     }
-
-    cout << max_len << endl;
+    cout << final << endl;
+}
+int main() {
+    maximumStableWindows();
     return 0;
 }
